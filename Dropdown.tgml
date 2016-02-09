@@ -2,7 +2,7 @@
 
 <!--[DocumentInformation]
 Created: 2015-12-17 10:28
-Modified: 2016-02-05 15:40
+Modified: 2016-02-09 15:03
 -->
 <?tgml version="1.3"?><Tgml ComponentCounter="14" GridSize="10"
     LayerCounter="4" UseGlobalScripts="True">
@@ -929,10 +929,8 @@ function load(evt) {
 
 global.rowObject.getParameters = function() { 	
  		this.next = null;
-// 		this.node.setAttribute("Left", 0.0);
+
  		this.height = Number(this.node.getAttribute("Height"));
- 		this.width = Number(this.node.getAttribute("Width"));
- 		this.valueWidth = Number(this.node.getAttribute("ValueWidth"));
 };
 
 // mandatory load event
@@ -943,14 +941,30 @@ function load(evt) {
 
 global.rowCtrl.getParameters = function() {
 	this.node.setAttribute("Left", 0.0);
-	var height = Number(this.node.getAttribute("Height"));
 	var width = Number(this.node.getAttribute("Width"));
 	var valueWidth = Number(this.node.getAttribute("ValueWidth"));
- 		
+ 	
 	// get the background rectangle for hover indication
-	this.vLine = this.node.getChildRecursive("VLine");
-	this.vLine.setAttribute("X1", this.width - this.valueWidth);
-	this.vLine.setAttribute("X2", this.width - this.valueWidth);
+	var vLine = this.node.getChildRecursive("VLine");
+	vLine.setAttribute("X1", width - valueWidth);
+	vLine.setAttribute("X2", width - valueWidth);
+	
+	// get the value text and adjust width
+	var valueText = this.node.getChildRecursive("Value");
+	valueText.setAttribute("Left", width - valueWidth);
+	valueText.setAttribute("Width", valueWidth - 5);
+	
+	// get the title text and adjust width
+	var titleText = this.node.getChildRecursive("Title");	
+	titleText.setAttribute("Width", width - valueWidth - 5);
+	
+	// get force icon and adjust position
+	var forcedIcon = this.node.getChildRecursive("ForcedIcon");
+ 	forcedIcon.setAttribute("Left", width - valueWidth);
+ 		
+ 	// get alarm icon and adjust position
+ 	var alarmIcon = this.node.getChildRecursive("AlarmIcon");
+ 	alarmIcon.setAttribute("Left", width - valueWidth);
 };
 
 // mandatory load event
@@ -1551,27 +1565,27 @@ function load(evt) {
             </TargetArea>
             <Expose ExposedAttribute="Id" Name="Component"/>
         </Component>
-        <Component Clip="False" ContentHeight="100" ContentWidth="400.0"
+        <Component Clip="False" ContentHeight="100" ContentWidth="300.0"
             Height="100.0" Id="Matrix" Left="86.0" Top="79.0"
-            Version="3.0" Width="400.0">
+            Version="3.0" Width="300.0">
             <Expose ExposedAttribute="Width" Name="Width"/>
             <Expose ExposedAttribute="ContentWidth" Name="Width"/>
             <Group Ctrl="matrix" GroupBuffer="20.0" Name="Matrix">
                 <Component Clip="False" ContentHeight="40"
-                    ContentWidth="400.0" Height="40" Id="Status"
-                    Left="0.0" Top="0.0" Width="400.0" initiallyExpanded="true">
+                    ContentWidth="300.0" Height="40" Id="Status"
+                    Left="0.0" Top="0.0" Width="300.0" initiallyExpanded="true">
                     <Expose ExposedAttribute="Id" Name="Group Title"/>
                     <Rectangle Fill="None" Height="40.0" Left="0.0"
                         Name="bgd" Opacity="1.0" RadiusX="5" RadiusY="5"
                         Stroke="#626469" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="300.0">
                         <Expose ExposedAttribute="Width" Name="Width"/>
                         <Expose ExposedAttribute="Height" Name="Header Height"/>
                     </Rectangle>
                     <Rectangle Fill="#FFFFFF" Height="40.0" Left="0.0"
                         Name="header" Opacity="1.0" RadiusX="5"
                         RadiusY="5" Stroke="None" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Width="300.0">
                         <LinearGradient EndPoint="0.0,1.0">
                             <GradientStop Color="#129D3E" Offset="0"/>
                             <GradientStop Color="#49B46B" Offset=".1"/>
@@ -1602,7 +1616,7 @@ function load(evt) {
                     </Component>
                     <TargetArea Height="40.0" Left="0.0" Name="Status"
                         Top="0.0" View_Matrix_Matrix_click=""
-                        View_Matrix_Matrix_up="" Width="400.0"
+                        View_Matrix_Matrix_up="" Width="300.0"
                         arrow_arrowRotate_up="" rows_up="">
                         <Expose ExposedAttribute="Name" Name="Group Title"/>
                         <Expose ExposedAttribute="Width" Name="Width"/>
@@ -1611,10 +1625,10 @@ function load(evt) {
                     <Group Ctrl="clickVisibility" Name="rows"
                         Visibility="Hidden" initiallyExpanded="true">
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="UnitMd" Height="20.0" Id="UnitMd"
                             Left="90.0" Name="" Top="130.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value" Name="UnitMd"
                                     display_ForcedIcon=""
@@ -1632,13 +1646,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -1796,10 +1810,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="EffOcc" Height="20.0" Id="EffOcc"
                             Left="80.0" Name="" Top="120.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value" Name="EffOcc"
                                     PreventDefault="False"
@@ -1818,13 +1832,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -1843,8 +1857,9 @@ function load(evt) {
                                     FontWeight="Normal" Height="20.0"
                                     HorizontalAlign="Right" Left="200.0"
                                     Name="Value" RemoteBind="true"
-                                    State0="Normal" State1="Override"
-                                    Stroke="#000000"
+                                    State0="Occupied"
+                                    State1="Unoccupied" State2="Standby"
+                                    State3="Override" Stroke="#000000"
                                     TextDecoration="None" Top="0.0"
                                     VerticalAlign="Middle"
                                     Width="95.0"><![CDATA[...]]><Expose
@@ -1853,6 +1868,8 @@ function load(evt) {
                                     <Expose ExposedAttribute="Suffix" Name="Suffix"/>
                                     <Expose ExposedAttribute="State0" Name="State0"/>
                                     <Expose ExposedAttribute="State1" Name="State1"/>
+                                    <Expose ExposedAttribute="State2" Name="State2"/>
+                                    <Expose ExposedAttribute="State3" Name="State3"/>
                                 </TextBox>
                                 <Component Clip="False"
                                     ContentHeight="20" ContentWidth="20"
@@ -1969,10 +1986,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="Tl" Height="20.0" Id="Tl" Left="60.0"
                             Name="" Top="100.0" ValueWidth="100.0"
-                            Visibility="Visible" Width="400.0">
+                            Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value" Name="Tl"
                                     Value="" display_ForcedIcon=""
@@ -1989,13 +2006,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -2139,10 +2156,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmOvr" Height="20.0" Id="RmOvr"
                             Left="70.0" Name="" Top="110.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value" Name="RmOvr"
                                     display_ForcedIcon=""
@@ -2160,13 +2177,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -2316,20 +2333,20 @@ function load(evt) {
                     <Expose ExposedAttribute="ContentWidth" Name="Width"/>
                 </Component>
                 <Component Clip="False" ContentHeight="40"
-                    ContentWidth="400.0" Height="40" Id="Setpoints"
-                    Left="0" Top="60" Width="400.0" initiallyExpanded="false">
+                    ContentWidth="300.0" Height="40" Id="Setpoints"
+                    Left="0" Top="60" Width="300.0" initiallyExpanded="false">
                     <Expose ExposedAttribute="Id" Name="Group Title"/>
                     <Rectangle Fill="None" Height="40.0" Left="0.0"
                         Name="bgd" Opacity="1.0" RadiusX="5" RadiusY="5"
                         Stroke="#626469" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="300.0">
                         <Expose ExposedAttribute="Width" Name="Width"/>
                         <Expose ExposedAttribute="Height" Name="Header Height"/>
                     </Rectangle>
                     <Rectangle Fill="#FFFFFF" Height="40.0" Left="0.0"
                         Name="header" Opacity="1.0" RadiusX="5"
                         RadiusY="5" Stroke="None" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Width="300.0">
                         <LinearGradient EndPoint="0.0,1.0">
                             <GradientStop Color="#129D3E" Offset="0"/>
                             <GradientStop Color="#49B46B" Offset=".1"/>
@@ -2361,7 +2378,7 @@ function load(evt) {
                     <TargetArea Height="40.0" Left="0.0"
                         Name="Setpoints" Top="0.0"
                         View_Matrix_Matrix_click=""
-                        View_Matrix_Matrix_up="" Width="400.0"
+                        View_Matrix_Matrix_up="" Width="300.0"
                         arrow_arrowRotate_up="" rows_up="">
                         <Expose ExposedAttribute="Name" Name="Group Title"/>
                         <Expose ExposedAttribute="Width" Name="Width"/>
@@ -2370,11 +2387,11 @@ function load(evt) {
                     <Group Ctrl="clickVisibility" Name="rows"
                         Visibility="Hidden" initiallyExpanded="false">
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpBsCspt" Height="20.0"
                             Id="RmTmpBsCspt" Left="70.0" Name=""
                             Top="110.0" ValueWidth="100.0"
-                            Visibility="Visible" Width="400.0">
+                            Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpBsCspt"
@@ -2387,13 +2404,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -2543,20 +2560,20 @@ function load(evt) {
                     <Expose ExposedAttribute="initiallyExpanded" Name="Initially Expanded"/>
                 </Component>
                 <Component Clip="False" ContentHeight="40"
-                    ContentWidth="400.0" Height="40.0" Id="Alarms"
-                    Left="0" Top="120" Width="400.0" initiallyExpanded="false">
+                    ContentWidth="300.0" Height="40.0" Id="Alarms"
+                    Left="0" Top="120" Width="300.0" initiallyExpanded="false">
                     <Expose ExposedAttribute="Id" Name="Group Title"/>
                     <Rectangle Fill="None" Height="40.0" Left="0.0"
                         Name="bgd" Opacity="1.0" RadiusX="5" RadiusY="5"
                         Stroke="#626469" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Visibility="Visible" Width="300.0">
                         <Expose ExposedAttribute="Width" Name="Width"/>
                         <Expose ExposedAttribute="Height" Name="Header Height"/>
                     </Rectangle>
                     <Rectangle Fill="#FFFFFF" Height="40.0" Left="0.0"
                         Name="header" Opacity="1.0" RadiusX="5"
                         RadiusY="5" Stroke="None" StrokeDashArray="0.0"
-                        StrokeWidth="1.0" Top="0.0" Width="400.0">
+                        StrokeWidth="1.0" Top="0.0" Width="300.0">
                         <LinearGradient EndPoint="0.0,1.0">
                             <GradientStop Color="#129D3E" Offset="0"/>
                             <GradientStop Color="#49B46B" Offset=".1"/>
@@ -2587,7 +2604,7 @@ function load(evt) {
                     </Component>
                     <TargetArea Height="40.0" Left="0.0" Name="Alarms"
                         Top="0.0" View_Matrix_Matrix_click=""
-                        View_Matrix_Matrix_up="" Width="400.0"
+                        View_Matrix_Matrix_up="" Width="300.0"
                         arrow_arrowRotate_up="" rows_up="">
                         <Expose ExposedAttribute="Name" Name="Group Title"/>
                         <Expose ExposedAttribute="Width" Name="Width"/>
@@ -2596,10 +2613,10 @@ function load(evt) {
                     <Group Ctrl="clickVisibility" Name="rows"
                         Visibility="Hidden" initiallyExpanded="false">
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpFal" Height="20.0" Id="RmTmpFal"
                             Left="80.0" Name="" Top="120.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpFal"
@@ -2616,13 +2633,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -2768,10 +2785,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpHal" Height="20.0" Id="RmTmpHal"
                             Left="90.0" Name="" Top="130.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpHal"
@@ -2788,13 +2805,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -2940,10 +2957,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpLal" Height="20.0" Id="RmTmpLal"
                             Left="100.0" Name="" Top="140.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpLal"
@@ -2960,13 +2977,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -3112,11 +3129,11 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpUnocHal" Height="20.0"
                             Id="RmTmpUnocHal" Left="110.0" Name=""
                             Top="150.0" ValueWidth="100.0"
-                            Visibility="Visible" Width="400.0">
+                            Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpUnocHal"
@@ -3134,13 +3151,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -3287,11 +3304,11 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="RmTmpUnocLal" Height="20.0"
                             Id="RmTmpUnocLal" Left="120.0" Name=""
                             Top="160.0" ValueWidth="100.0"
-                            Visibility="Visible" Width="400.0">
+                            Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="RmTmpUnocLal"
@@ -3309,13 +3326,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
@@ -3462,10 +3479,10 @@ function load(evt) {
                             <Expose ExposedAttribute="ValueWidth" Name="Value Width"/>
                         </Component>
                         <Component Clip="False" ContentHeight="20"
-                            ContentWidth="400.0" Ctrl="rowCtrl"
+                            ContentWidth="300.0" Ctrl="rowCtrl"
                             Group="SaTmpFal" Height="20.0" Id="SaTmpFal"
                             Left="130.0" Name="" Top="170.0"
-                            ValueWidth="100.0" Visibility="Visible" Width="400.0">
+                            ValueWidth="100.0" Visibility="Visible" Width="300.0">
                             <Group Name="binds">
                                 <Bind Description="Value"
                                     Name="SaTmpFal"
@@ -3482,13 +3499,13 @@ function load(evt) {
                                 <Line Name="VLine" Stroke="#626469"
                                     X1="200" X2="200" Y2="20"/>
                                 <Line Name="Hline" Stroke="#626469"
-                                    X1="0" X2="400.0" Y1="20" Y2="20">
+                                    X1="0" X2="300.0" Y1="20" Y2="20">
                                     <Expose ExposedAttribute="X2" Name="Width"/>
                                 </Line>
                                 <Rectangle Ctrl="hoverVisibility"
                                     Fill="#9FA0A4" Height="20"
                                     Name="bgd" RadiusX="5" RadiusY="5"
-                                    Stroke="None" Visibility="Hidden" Width="400.0">
+                                    Stroke="None" Visibility="Hidden" Width="300.0">
                                     <Expose ExposedAttribute="Width" Name="Width"/>
                                 </Rectangle>
                                 <TextBox FontFamily="Arial"
